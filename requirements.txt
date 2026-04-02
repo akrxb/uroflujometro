@@ -1,4 +1,0 @@
-flask
-influxdb-client
-flask-sqlalchemy
-requests
