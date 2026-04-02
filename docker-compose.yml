@@ -38,12 +38,12 @@ services:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
   # Página Web
   flaskapp:
-    build: ./flask_app
+    build: ./flaskBack
     container_name: flask_web
     ports:
       - "5000:5000"
     volumes:
-      - ./flask_app:/app
+      - ./flaskBack:/app
     depends_on:
       - influxdb
 
