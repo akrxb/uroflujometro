@@ -6,8 +6,32 @@ En este se utilizan las siguientes tecnologías:
 - Node-Red: para definir el flujo que llevará a cabo el programa.  
 - InfluxDB: como base de datos temporal, necesaria para tener registro temporal de todas las medidas.  
 - Grafana: con la que obtenemos las gráficas de las medidas.
-- Flask: backend necesario para la parte web (esta en HTML y CSS).
-Por otra parte, hardware utilizado es una ESP32C3 de steeed studio conectada a un groove shield para la conexión física de un botón que dará los distintos estados del programa, sensor HX711 (1 kg) y una pantalla redonda de 240 x 240 píxeles de resolución. Más adelante se comentará los pines utilizados.
+- Flask: backend necesario para la parte web (esta en HTML y CSS).  
+Por otra parte, hardware utilizado es una ESP32C3 de steeed studio conectada a un groove shield para la conexión física de un botón que dará los distintos estados del programa, sensor HX711 (1 kg) y una pantalla redonda de 240 x 240 píxeles de resolución. Más adelante se comentará los pines utilizados. Para leer lo que viene del serial, utilizamos comunicación UDP por el puerto 9000, y el script de python indicado.
 
 ### GUÍA DE INSTALACIÓN COMPLETA
-Primero debemos de instalar Docker y utilizaremos el docker-compose.yml del repositorio para que se creen las imagenes que necesitamos dentro del contenedor.
+Primero debemos de instalar Docker y utilizaremos el docker-compose.yml del repositorio para que se creen las imagenes que necesitamos dentro del contenedor. Crear una carpeta donde se vaya a trabajar el proyecto (incluir aquí el .yml), y una vez la tengamos creada, en el mismo path de esta carpeta ejecutamos el siguiente comando: ```docker-compose up --build```. Con esto, ya tendríamos las imagenes creadas de las diferentes herramientas, lo que nos toca hacer ahora ir configurando cada una.
+#### NODE-RED
+Inicialmente al entrar al puerte que tengamos configurado, nos debe de salir un "lienzo" en vacío, así que vamos a ir integrando los diferentes nodos.  
+<img width="1916" height="703" alt="image" src="https://github.com/user-attachments/assets/d51a8fc9-c56b-416a-be18-980d1214ef5e" />
+Necesario instalar la librería node-red que incluye el nodo udp, y además node-red-contrib-influxdb para la base de datos. Una vez instalados:
+- **UDP**: puerto de escucha 9000, ipv4 y ponemos como salida "un Texto".
+- **Switch**: dejamos como te viene por defecto la propiedad, solo en la regla buscamos la opción "match regex" y escribimos "^\{.*\}$".
+- **JSON**: importante aquí marcar la opción "Convertir siempre a objeto de javascript", lo demás por defecto.
+- **Switch**: la propiedad ahora será "payload.estado", añadimos una nueva regla, y en la primera (que será primera salida), escribimos 2 (opción a..z), y en la segunda 3 (opción a..z).
+- **Funciones de control de flujo** primera y segunda: la primera es la que irá al bloque de influxDB, la segunda hará un POST al backend con la última medida.
+- **InfluxDB**: buscamos influx out y lo añadimos, su configuración la definiremos más adelante.
+- **HTTP request**: seleccionamos el método "POST" y que devuelva la opción "un JSON analizado".
+#### INFLUXDB
+Nos toca configurar la base datos, entonces creamos una cuenta si no tenemos y además nos pedirá nombre de organización, ponemos en este caso "reto_upct". Una vez creada la cuenta, nos logueamos.  
+Ahora vamos a "Load Data" - "API token" y creamos uno. IMPORTANTE GUARDAR EL TOKEN. Posteriomente, creamos un "Bucket" de nombre "uroflujometro".
+Los nombres pueden ser los que queramos pero debemos de tenerlos en cuenta para conectar node-red con influxdb.  
+Podemos ir devuelta a node-red, y completar las opciones del nodo:  
+- **Servidor**: creamos uno nuevo, importante para la url escribir "http://influxdb:puerto" y pegar el token.
+- **Otras opciones**: tanto organización, como bucket tienen que ser los mismo que los de la base de datos, mediciones puedes darle el nombe que quieras.
+#### GRAFANA
+Esto es más simple, creamos una nueva dashboard y utilizando el *time series plotter*, y en query la secuencia que se proporciona lo tenemos todo casi hecho, solo hay que en las opciones, hacer que la consulta se actualice cada 5 segundos en auto.
+#### FLASK
+Como todo está en los archivos y carpetas correctas, solo asegurarse que todo está en su sitio.
+### Flujo que se espera del programa
+El usuario debe conectar la ESP32_, comprobando que la asignación de pines es correcta, después deberá de revisar el puerto asignado por el ordenador a la ESP32. Una vez lo tenga, modificar el COM el script de python si procede y ejecutarlo. Después ejecutar el "docker-compose..." que se dijo anteriormente, y una vez este todo listo, pulsar el botón para que inicie el paso de datos. Con eso ya se podrían ver los datos tanto en la base de datos como en grafana. Una vez se vuelva a pulsar el botón, se debe haber realizado el POST, y haber un nuevo informe en la página de consultas. No fuese así, comprobar que todo está bien conectado.
