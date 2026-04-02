@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="/consultas" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Volver a Consultas
+        </a>
+        <button class="btn btn-primary btn-sm shadow-sm" onclick="window.print()">
+            <i class="bi bi-printer"></i> Imprimir Informe PDF
+        </button>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0">Detalles del Paciente</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <small class="text-muted d-block font-weight-bold">ID Paciente</small>
+                        <span class="h5">{{ datos.id }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block font-weight-bold">Fecha de la Prueba</small>
+                        <span>{{ datos.fecha }}</span>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <h5 class="text-primary mb-3">Resultados Clínicos</h5>
+                    <div class="mb-4">
+                        <small class="text-muted d-block">Flujo Máximo (Qmax)</small>
+                        <span class="h3 text-dark">{{ datos.q_max }}</span>
+                        <small class="text-muted">ml/s</small>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Volumen Miccional Total</small>
+                        <span class="h3 text-dark">{{ datos.v_total }}</span>
+                        <small class="text-muted">ml</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-light border shadow-sm small">
+                <i class="bi bi-info-circle text-primary"></i>
+                Este informe ha sido generado automáticamente por el sistema Uroflow mediante monitorización en tiempo
+                real.
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm h-100 border-0 overflow-hidden">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h5 class="text-primary mb-0">Dinámica Miccional (Caudal y Volumen)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <iframe
+                        src="http://localhost:3000/d-solo/adn87dp/datosuro?orgId=1&from={{ datos.ts_inicio }}&to={{ datos.ts_fin }}&var-paciente_id={{ datos.id }}&panelId=panel-1"
+                        width="100%" height="400" frameborder="0">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
