@@ -2,7 +2,7 @@ import serial
 import socket
 import time
 
-# --- CONFIGURACIÓN ---
+# Cambiar puerto y baudios si procede.
 SERIAL_PORT = 'COM9' 
 BAUD_RATE = 115200
 UDP_IP = "127.0.0.1"
@@ -22,18 +22,10 @@ def iniciar_puente():
                     # Usamos read_all o readline pero verificando el contenido
                     if ser.in_waiting > 0:
                         linea = ser.readline().decode('utf-8', errors='ignore').strip()
-                        
                         if linea:
                             print(f"TX -> {linea}")
                             # Enviamos inmediatamente
                             sock.sendto(linea.encode(), (UDP_IP, UDP_PORT))
-                            
-                            # LOGICA DE CIERRE: 
-                            # Si el ESP32 envía una marca de fin, forzamos una pausa 
-                            # para que Node-RED procese antes de cualquier desconexión
-                            if "FIN" in linea.upper():
-                                print("Detectado fin de prueba. Asegurando envío...")
-                                time.sleep(0.1) 
 
         except (serial.SerialException, FileNotFoundError):
             print(f"Error en {SERIAL_PORT}. Reintentando...")
