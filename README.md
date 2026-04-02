@@ -35,3 +35,8 @@ Esto es más simple, creamos una nueva dashboard y utilizando el *time series pl
 Como todo está en los archivos y carpetas correctas, solo asegurarse que todo está en su sitio.
 ### Flujo que se espera del programa
 El usuario debe conectar la ESP32_, comprobando que la asignación de pines es correcta, después deberá de revisar el puerto asignado por el ordenador a la ESP32. Una vez lo tenga, modificar el COM el script de python si procede y ejecutarlo. Después ejecutar el "docker-compose..." que se dijo anteriormente, y una vez este todo listo, pulsar el botón para que inicie el paso de datos. Con eso ya se podrían ver los datos tanto en la base de datos como en grafana. Una vez se vuelva a pulsar el botón, se debe haber realizado el POST, y haber un nuevo informe en la página de consultas. No fuese así, comprobar que todo está bien conectado.
+### Página Web
+Montamos la siguiente web:
+<img width="1292" height="781" alt="image" src="https://github.com/user-attachments/assets/8e1f0a21-df3b-4c53-9353-b06eb215a198" />
+
+<img width="1299" height="578" alt="image" src="https://github.com/user-attachments/assets/1803713e-12ed-40b5-89d5-2d5e4845db9c" />
