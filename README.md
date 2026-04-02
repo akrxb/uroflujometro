@@ -1,4 +1,4 @@
-# Uroflujómetro
+# Uroflujómetro (incompleto)
 
 Este el repositorio respectivo a la primera parte del reto, en concreto, a la parte de la uroflujometría.
 En este se utilizan las siguientes tecnologías:  
