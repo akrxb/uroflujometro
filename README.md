@@ -14,7 +14,7 @@ Comentar que se espera la entrada por serial de un JSON de tal forma que conteng
 Primero debemos de instalar Docker y utilizaremos el docker-compose.yml del repositorio para que se creen las imagenes que necesitamos dentro del contenedor. Crear una carpeta donde se vaya a trabajar el proyecto (incluir aquí el .yml), y una vez la tengamos creada, en el mismo path de esta carpeta ejecutamos el siguiente comando: ```docker-compose up --build```. Con esto, ya tendríamos las imagenes creadas de las diferentes herramientas, lo que nos toca hacer ahora ir configurando cada una.
 #### NODE-RED
 Inicialmente al entrar al puerte que tengamos configurado, nos debe de salir un "lienzo" en vacío, así que vamos a ir integrando los diferentes nodos.  
-<img width="1918" height="905" alt="image" src="https://github.com/user-attachments/assets/c4bdd6e8-bd36-4489-95b2-c633c7cbf27d" />
+<img width="900" height="900" alt="image" src="https://github.com/user-attachments/assets/c4bdd6e8-bd36-4489-95b2-c633c7cbf27d" />
 Necesario instalar la librería node-red que incluye el nodo udp, y además node-red-contrib-influxdb para la base de datos. Una vez instalados:
 - **UDP**: puerto de escucha 9000, ipv4 y ponemos como salida "un Texto".
 - **Switch**: dejamos como te viene por defecto la propiedad, solo en la regla buscamos la opción "match regex" y escribimos "^\{.*\}$".
@@ -87,16 +87,16 @@ from(bucket: "nombre_bucket")
 Como todo está en los archivos y carpetas correctas, solo asegurarse que todo está en su sitio.
 ### Página Web
 Montamos la siguiente web:
-<img width="1292" height="781" alt="image" src="https://github.com/user-attachments/assets/8e1f0a21-df3b-4c53-9353-b06eb215a198" />
-<img width="1299" height="578" alt="image" src="https://github.com/user-attachments/assets/1803713e-12ed-40b5-89d5-2d5e4845db9c" />
-<img width="1306" height="682" alt="image" src="https://github.com/user-attachments/assets/51a602ad-234a-4050-bc86-1f930de4ef93" />
-<img width="1304" height="866" alt="image" src="https://github.com/user-attachments/assets/caadeda3-f6fa-4ca1-9938-e69987631aa8" />
+<img width="900" height="900" alt="image" src="https://github.com/user-attachments/assets/8e1f0a21-df3b-4c53-9353-b06eb215a198" />
+<img width="900" height="900" alt="image" src="https://github.com/user-attachments/assets/1803713e-12ed-40b5-89d5-2d5e4845db9c" />
+<img width="900" height="900" alt="image" src="https://github.com/user-attachments/assets/51a602ad-234a-4050-bc86-1f930de4ef93" />
+<img width="900" height="900" alt="image" src="https://github.com/user-attachments/assets/caadeda3-f6fa-4ca1-9938-e69987631aa8" />
 ### Conexión física en ESP32C3
 El botón se conectará en el D2.  
 Sensor HX711 en el D0 (DT) - D1 (SCK), y la pantalla en el D7 y el D5 (comunicación).
-<br/><img width="749" height="689" alt="image" src="https://github.com/user-attachments/assets/3f2b89c3-48b3-4a6e-9b1f-13499ee60c41" /><br/>
+<br/><img width="900" height="900" alt="image" src="https://github.com/user-attachments/assets/3f2b89c3-48b3-4a6e-9b1f-13499ee60c41" /><br/>
 El botón se conectará en el D2.
 Sensor HX711 en el D0 (DT) - D1 (SCK), y la pantalla en 
 
-### Flujo que se espera del programa
-El usuario debe conectar la ESP32_, comprobando que la asignación de pines es correcta, después deberá de revisar el puerto asignado por el ordenador a la ESP32. Una vez lo tenga, modificar el COM el script de python si procede y ejecutarlo. Después ejecutar el "docker-compose..." que se dijo anteriormente, y una vez este todo listo, pulsar el botón para que inicie el paso de datos. Con eso ya se podrían ver los datos tanto en la base de datos como en grafana. Una vez se vuelva a pulsar el botón, se debe haber realizado el POST, y haber un nuevo informe en la página de consultas. No fuese así, comprobar que todo está bien conectado.
+### Cómo se debe de proceder
+El usuario debe conectar la ESP32C3 con las conexiones indicadas, comprobando que la asignación de pines es la correcta, y después deberá de revisar el puerto asignado por el ordenador a la placa. Una vez lo tenga, modificar el COM el script de python si procede y ejecutarlo antes de que empiece con la captura de medidas. Después ejecutar el comando de *build* que se comentó anteriormente, y una vez este todo listo, pulsar el botón para que inicie el paso de datos. Con eso ya se podrían ver los datos tanto en la base de datos como en grafana. Una vez se vuelva a pulsar el botón, se debe haber realizado el POST, y haber un nuevo informe en la página de consultas. Si no fuera así, comprobar el log y conexiones.
