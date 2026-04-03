@@ -7,7 +7,8 @@ En este se utilizan las siguientes tecnologías:
 - InfluxDB: como base de datos temporal, necesaria para tener registro temporal de todas las medidas.  
 - Grafana: con la que obtenemos las gráficas de las medidas.
 - Flask: backend necesario para la parte web (esta en HTML y CSS).  
-Por otra parte, hardware utilizado es una ESP32C3 de steeed studio conectada a un groove shield para la conexión física de un botón que dará los distintos estados del programa, sensor HX711 (1 kg) y una pantalla redonda de 240 x 240 píxeles de resolución. Más adelante se comentará los pines utilizados. Para leer lo que viene del serial, utilizamos comunicación UDP por el puerto 9000, y el script de python indicado.
+Por otra parte, hardware utilizado es una ESP32C3 de steeed studio conectada a un groove shield para la conexión física de un botón que dará los distintos estados del programa, sensor HX711 (1 kg) y una pantalla redonda de 240 x 240 píxeles de resolución. Más adelante se comentará los pines utilizados. Para leer lo que viene del serial, utilizamos comunicación UDP por el puerto 9000, y el script de python indicado.  
+Comentar que se espera la entrada por serial de un JSON de tal forma que contenga: {"id": id_paciente,"p":peso,"c":caudal,"v_total":volumen_total,"q_max":caudal_max,"estado":estado_proceso}.
 
 ### GUÍA DE INSTALACIÓN COMPLETA
 Primero debemos de instalar Docker y utilizaremos el docker-compose.yml del repositorio para que se creen las imagenes que necesitamos dentro del contenedor. Crear una carpeta donde se vaya a trabajar el proyecto (incluir aquí el .yml), y una vez la tengamos creada, en el mismo path de esta carpeta ejecutamos el siguiente comando: ```docker-compose up --build```. Con esto, ya tendríamos las imagenes creadas de las diferentes herramientas, lo que nos toca hacer ahora ir configurando cada una.
