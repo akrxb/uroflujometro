@@ -93,7 +93,7 @@ Montamos la siguiente web:
 <img width="1304" height="866" alt="image" src="https://github.com/user-attachments/assets/caadeda3-f6fa-4ca1-9938-e69987631aa8" />
 ### Conexión física en ESP32C3
 El botón se conectará en el D2.  
-Sensor HX711 en el D0 (DT) - D1 (SCK), y la pantalla en 
+Sensor HX711 en el D0 (DT) - D1 (SCK), y la pantalla en el D7 y el D5 (comunicación).
 <br/><img width="749" height="689" alt="image" src="https://github.com/user-attachments/assets/3f2b89c3-48b3-4a6e-9b1f-13499ee60c41" /><br/>
 El botón se conectará en el D2.
 Sensor HX711 en el D0 (DT) - D1 (SCK), y la pantalla en 
