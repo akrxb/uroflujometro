@@ -13,13 +13,55 @@ Por otra parte, hardware utilizado es una ESP32C3 de steeed studio conectada a u
 Primero debemos de instalar Docker y utilizaremos el docker-compose.yml del repositorio para que se creen las imagenes que necesitamos dentro del contenedor. Crear una carpeta donde se vaya a trabajar el proyecto (incluir aquí el .yml), y una vez la tengamos creada, en el mismo path de esta carpeta ejecutamos el siguiente comando: ```docker-compose up --build```. Con esto, ya tendríamos las imagenes creadas de las diferentes herramientas, lo que nos toca hacer ahora ir configurando cada una.
 #### NODE-RED
 Inicialmente al entrar al puerte que tengamos configurado, nos debe de salir un "lienzo" en vacío, así que vamos a ir integrando los diferentes nodos.  
-<img width="1916" height="703" alt="image" src="https://github.com/user-attachments/assets/d51a8fc9-c56b-416a-be18-980d1214ef5e" />
+<img width="1918" height="905" alt="image" src="https://github.com/user-attachments/assets/c4bdd6e8-bd36-4489-95b2-c633c7cbf27d" />
 Necesario instalar la librería node-red que incluye el nodo udp, y además node-red-contrib-influxdb para la base de datos. Una vez instalados:
 - **UDP**: puerto de escucha 9000, ipv4 y ponemos como salida "un Texto".
 - **Switch**: dejamos como te viene por defecto la propiedad, solo en la regla buscamos la opción "match regex" y escribimos "^\{.*\}$".
 - **JSON**: importante aquí marcar la opción "Convertir siempre a objeto de javascript", lo demás por defecto.
 - **Switch**: la propiedad ahora será "payload.estado", añadimos una nueva regla, y en la primera (que será primera salida), escribimos 2 (opción a..z), y en la segunda 3 (opción a..z).
-- **Funciones de control de flujo** primera y segunda: la primera es la que irá al bloque de influxDB, la segunda hará un POST al backend con la última medida.
+- **Funciones de control de flujo** - influxDB: copiar y pegar el código en la sección mensaje.
+```
+if (!msg.payload || typeof msg.payload !== 'object' || msg.payload.id === undefined) {
+    return null; // Si no tiene ID, ignoramos este mensaje específico
+}
+
+let data = msg.payload;
+
+msg.payload = {
+    peso: data.p || 0,
+    caudal: data.c || 0,
+    volumen: data.v_total || 0
+};
+
+msg.tags = {
+    paciente_id: String(data.id)
+};
+
+return msg;
+```
+- **Funciones de control de flujo** - HTTP Request: copiar y pegar el código en la sección mensaje.
+```
+if (!msg.payload || msg.payload.estado !== 3) {
+    return null;
+}
+
+let data = msg.payload;
+msg.payload = {
+    id: data.id,
+    v_total: data.v_total,
+    q_max: data.q_max,
+    ts_inicio: Date.now() - 30000, // Ajusta este cálculo si el ESP32 no lo envía
+    ts_fin: Date.now()
+};
+
+msg.headers = {
+    "Content-Type": "application/json"
+};
+
+msg.url = "http://flaskBack:5000/api/finalizar_prueba";
+
+return msg;
+```
 - **InfluxDB**: buscamos influx out y lo añadimos, su configuración la definiremos más adelante.
 - **HTTP request**: seleccionamos el método "POST" y que devuelva la opción "un JSON analizado".
 #### INFLUXDB
@@ -33,10 +75,16 @@ Podemos ir devuelta a node-red, y completar las opciones del nodo:
 Esto es más simple, creamos una nueva dashboard y utilizando el *time series plotter*, y en query la secuencia que se proporciona lo tenemos todo casi hecho, solo hay que en las opciones, hacer que la consulta se actualice cada 5 segundos en auto.
 #### FLASK
 Como todo está en los archivos y carpetas correctas, solo asegurarse que todo está en su sitio.
-### Flujo que se espera del programa
-El usuario debe conectar la ESP32_, comprobando que la asignación de pines es correcta, después deberá de revisar el puerto asignado por el ordenador a la ESP32. Una vez lo tenga, modificar el COM el script de python si procede y ejecutarlo. Después ejecutar el "docker-compose..." que se dijo anteriormente, y una vez este todo listo, pulsar el botón para que inicie el paso de datos. Con eso ya se podrían ver los datos tanto en la base de datos como en grafana. Una vez se vuelva a pulsar el botón, se debe haber realizado el POST, y haber un nuevo informe en la página de consultas. No fuese así, comprobar que todo está bien conectado.
 ### Página Web
 Montamos la siguiente web:
 <img width="1292" height="781" alt="image" src="https://github.com/user-attachments/assets/8e1f0a21-df3b-4c53-9353-b06eb215a198" />
-
 <img width="1299" height="578" alt="image" src="https://github.com/user-attachments/assets/1803713e-12ed-40b5-89d5-2d5e4845db9c" />
+<img width="1306" height="682" alt="image" src="https://github.com/user-attachments/assets/51a602ad-234a-4050-bc86-1f930de4ef93" />
+<img width="1304" height="866" alt="image" src="https://github.com/user-attachments/assets/caadeda3-f6fa-4ca1-9938-e69987631aa8" />
+### Conexión física en ESP32C3
+<img width="749" height="689" alt="image" src="https://github.com/user-attachments/assets/3f2b89c3-48b3-4a6e-9b1f-13499ee60c41" /><br/>
+El botón se conectará en el D2.
+Sensor HX711 en el D0 (DT) - D1 (SCK), y la pantalla 
+
+### Flujo que se espera del programa
+El usuario debe conectar la ESP32_, comprobando que la asignación de pines es correcta, después deberá de revisar el puerto asignado por el ordenador a la ESP32. Una vez lo tenga, modificar el COM el script de python si procede y ejecutarlo. Después ejecutar el "docker-compose..." que se dijo anteriormente, y una vez este todo listo, pulsar el botón para que inicie el paso de datos. Con eso ya se podrían ver los datos tanto en la base de datos como en grafana. Una vez se vuelva a pulsar el botón, se debe haber realizado el POST, y haber un nuevo informe en la página de consultas. No fuese así, comprobar que todo está bien conectado.
