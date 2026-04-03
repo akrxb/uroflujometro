@@ -1,4 +1,4 @@
-# Uroflujómetro (incompleto)
+# Uroflujómetro
 
 Este el repositorio respectivo a la primera parte del reto, en concreto, a la parte de la uroflujometría.
 En este se utilizan las siguientes tecnologías:  
@@ -73,7 +73,16 @@ Podemos ir devuelta a node-red, y completar las opciones del nodo:
 - **Servidor**: creamos uno nuevo, importante para la url escribir "http://influxdb:puerto" y pegar el token.
 - **Otras opciones**: tanto organización, como bucket tienen que ser los mismo que los de la base de datos, mediciones puedes darle el nombe que quieras.
 #### GRAFANA
-Esto es más simple, creamos una nueva dashboard y utilizando el *time series plotter*, y en query la secuencia que se proporciona lo tenemos todo casi hecho, solo hay que en las opciones, hacer que la consulta se actualice cada 5 segundos en auto.
+Esto es más simple, creamos una nueva dashboard y utilizando el *time series plotter*, y en query la secuencia que se proporciona lo tenemos todo casi hecho, solo hay que en las opciones, hacer que la consulta se actualice cada 5 segundos en auto. Además, para la gráfica debemos de escribir en la sección "Standard options" - "Display Name": "${__field.labels._field}".  
+El código necesario para realizar la consulta a la base de datos es:  
+``` 
+from(bucket: "nombre_bucket")
+  |> range(start: -5m) //se puede cambiar por "now" o "5m".
+  |> filter(fn: (r) => r["_measurement"] == "nombre_mediciones")
+  |> filter(fn: (r) => r["_field"] == "caudal" or r["_field"] == "peso" or r["_field"] == "paciente_id")
+  |> group(columns: ["paciente_id", "_field"])
+  |> yield(name: "uroflujometro")
+```
 #### FLASK
 Como todo está en los archivos y carpetas correctas, solo asegurarse que todo está en su sitio.
 ### Página Web
