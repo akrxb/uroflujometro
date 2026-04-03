@@ -92,9 +92,11 @@ Montamos la siguiente web:
 <img width="1306" height="682" alt="image" src="https://github.com/user-attachments/assets/51a602ad-234a-4050-bc86-1f930de4ef93" />
 <img width="1304" height="866" alt="image" src="https://github.com/user-attachments/assets/caadeda3-f6fa-4ca1-9938-e69987631aa8" />
 ### Conexión física en ESP32C3
-<img width="749" height="689" alt="image" src="https://github.com/user-attachments/assets/3f2b89c3-48b3-4a6e-9b1f-13499ee60c41" /><br/>
+El botón se conectará en el D2.  
+Sensor HX711 en el D0 (DT) - D1 (SCK), y la pantalla en 
+<br/><img width="749" height="689" alt="image" src="https://github.com/user-attachments/assets/3f2b89c3-48b3-4a6e-9b1f-13499ee60c41" /><br/>
 El botón se conectará en el D2.
-Sensor HX711 en el D0 (DT) - D1 (SCK), y la pantalla 
+Sensor HX711 en el D0 (DT) - D1 (SCK), y la pantalla en 
 
 ### Flujo que se espera del programa
 El usuario debe conectar la ESP32_, comprobando que la asignación de pines es correcta, después deberá de revisar el puerto asignado por el ordenador a la ESP32. Una vez lo tenga, modificar el COM el script de python si procede y ejecutarlo. Después ejecutar el "docker-compose..." que se dijo anteriormente, y una vez este todo listo, pulsar el botón para que inicie el paso de datos. Con eso ya se podrían ver los datos tanto en la base de datos como en grafana. Una vez se vuelva a pulsar el botón, se debe haber realizado el POST, y haber un nuevo informe en la página de consultas. No fuese así, comprobar que todo está bien conectado.
