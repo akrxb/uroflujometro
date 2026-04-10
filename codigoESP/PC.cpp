@@ -41,7 +41,7 @@ DatosProcesados procesamientoDatos(int IDPaciente) {
     variacion_peso = lectura_peso - lectura_peso_anterior;
     variacion_tiempo = tiempo_actual - tiempo_anterior;
 
-    // SOLO CALCULAMOS CAUDAL SI ESTAMOS GRABANDO - TOCAR APLICAR FILTRO
+    // SOLO CALCULAMOS CAUDAL SI ESTAMOS GRABANDO
     if (estadoSist == RECORDING && variacion_tiempo > 0.0001) {
         if (variacion_peso > 0.000001) {
             lectura_caudal = abs(variacion_peso / variacion_tiempo);
