@@ -36,28 +36,20 @@ services:
       - GF_SECURITY_ALLOW_EMBEDDING=true
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
-
   # Página Web
   flaskapp:
-    build: ./flask_app
+    build: ./flaskBack
     container_name: flask_web
     ports:
       - "5000:5000"
     volumes:
-      - ./flask_app:/app
+      - ./flaskBack:/app
     depends_on:
       - influxdb
-  tunnel:
-    image: ngrok/ngrok:latest
-    restart: unless-stopped
-    environment:
-      - NGROK_AUTHTOKEN=token
-    command:
-      - "http"
-      - "flask_web:5000"
-      - "--url=thermostable-raye-spreathed.ngrok-free.dev"
 
 volumes:
   influxdb-data:
   node-red-data:
   grafana-data:
+
+
