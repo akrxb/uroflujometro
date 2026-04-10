@@ -63,6 +63,7 @@ msg.url = "http://flaskBack:5000/api/finalizar_prueba";
 
 return msg;
 ```
+También se puede descargar directamente el archivo JSON para su posterior importación
 - **InfluxDB**: buscamos influx out y lo añadimos, su configuración la definiremos más adelante.
 - **HTTP request**: seleccionamos el método "POST" y que devuelva la opción "un JSON analizado".
 #### INFLUXDB
