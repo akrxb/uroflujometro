@@ -103,3 +103,5 @@ Sensor HX711 en el D0 (DT) - D1 (SCK).
 
 ### Cómo se debe de proceder
 El usuario debe conectar la ESP32C3 con las conexiones indicadas, comprobando que la asignación de pines es la correcta, y después deberá de revisar el puerto asignado por el ordenador a la placa. Una vez lo tenga, modificar el COM el script de python si procede y ejecutarlo antes de que empiece con la captura de medidas. Después ejecutar el comando de *build* que se comentó anteriormente, y una vez este todo listo, pulsar el botón para que inicie el paso de datos. Con eso ya se podrían ver los datos tanto en la base de datos como en grafana. Una vez se vuelva a pulsar el botón, se debe haber realizado el POST, y haber un nuevo informe en la página de consultas. Si no fuera así, comprobar el log y conexiones.
+
+#### Se ha usado NGROK para hacer la web visible.
