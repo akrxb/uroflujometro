@@ -11,10 +11,11 @@ Por otra parte, hardware utilizado es una ESP32C3 de steeed studio conectada a u
 Comentar que se espera la entrada por serial de un JSON de tal forma que contenga: {"id": id_paciente,"p":peso,"c":caudal,"v_total":volumen_total,"q_max":caudal_max,"estado":estado_proceso}.
 
 ### GUÍA DE INSTALACIÓN COMPLETA
-Primero debemos de instalar Docker y utilizaremos el docker-compose.yml del repositorio para que se creen las imagenes que necesitamos dentro del contenedor. Crear una carpeta donde se vaya a trabajar el proyecto (incluir aquí el .yml), y una vez la tengamos creada, en el mismo path de esta carpeta ejecutamos el siguiente comando: ```docker-compose up --build```. Con esto, ya tendríamos las imagenes creadas de las diferentes herramientas, lo que nos toca hacer ahora ir configurando cada una.
+Primero debemos de instalar Docker y utilizaremos el docker-compose.yml del repositorio para que se creen las imagenes que necesitamos dentro del contenedor. Crear una carpeta donde se vaya a trabajar el proyecto (incluir aquí el .yml), y una vez la tengamos creada, en el mismo path de esta carpeta ejecutamos el siguiente comando: ```docker-compose up --build```.    
+Con esto, ya tendríamos las imagenes creadas de las diferentes herramientas, lo que nos toca hacer ahora ir configurando cada una.
 #### NODE-RED
 Inicialmente al entrar al puerte que tengamos configurado, nos debe de salir un "lienzo" en vacío, así que vamos a ir integrando los diferentes nodos.  
-<img width="900" height="900" alt="image" src="https://github.com/user-attachments/assets/c4bdd6e8-bd36-4489-95b2-c633c7cbf27d" />
+<img width="900" height="900" alt="image" src="https://github.com/user-attachments/assets/c4bdd6e8-bd36-4489-95b2-c633c7cbf27d" />    
 Necesario instalar la librería node-red que incluye el nodo udp, y además node-red-contrib-influxdb para la base de datos. Una vez instalados:
 - **UDP**: puerto de escucha 9000, ipv4 y ponemos como salida "un Texto".
 - **Switch**: dejamos como te viene por defecto la propiedad, solo en la regla buscamos la opción "match regex" y escribimos "^\{.*\}$".
