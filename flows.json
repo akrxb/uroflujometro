@@ -1,0 +1,233 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "3cc11d24.ff01a2",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "75a742c04d424c3a",
+        "type": "udp in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "iface": "",
+        "port": "9000",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "utf8",
+        "x": 80,
+        "y": 420,
+        "wires": [
+            [
+                "090c10b5cb55d3f9"
+            ]
+        ]
+    },
+    {
+        "id": "c1d0314766722d0d",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "ControlFlujo",
+        "func": "// 1. Verificamos que el payload sea un objeto y tenga la propiedad 'id'\nif (!msg.payload || typeof msg.payload !== 'object' || msg.payload.id === undefined) {\n    return null; // Si no tiene ID, ignoramos este mensaje específico\n}\n\nlet data = msg.payload;\n\n// 2. Mapeamos los datos para InfluxDB\nmsg.payload = {\n    peso: data.p || 0,\n    caudal: data.c || 0,\n    volumen: data.v_total || 0\n};\n\n// 3. Convertimos el ID a string de forma segura\nmsg.tags = {\n    paciente_id: String(data.id)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 380,
+        "wires": [
+            [
+                "85071dba1372ade8"
+            ]
+        ]
+    },
+    {
+        "id": "85071dba1372ade8",
+        "type": "influxdb out",
+        "z": "f6f2187d.f17ca8",
+        "influxdb": "48b962a8bc2da5eb",
+        "name": "BBDD_influx",
+        "measurement": "datos_uro",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "reto_upct",
+        "bucket": "uroflujometro",
+        "x": 970,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "075eca1236e8c8ea",
+        "type": "json",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 370,
+        "y": 420,
+        "wires": [
+            [
+                "42075c4b960d99fd",
+                "1125de08bc122ffb"
+            ]
+        ]
+    },
+    {
+        "id": "401c30a882c5e25b",
+        "type": "http request",
+        "z": "f6f2187d.f17ca8",
+        "name": "controlBoton",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 970,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "271d37c73c5cb8c7",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "ControlFlujo",
+        "func": "// Validamos que el estado sea el de finalización (3)\nif (!msg.payload || msg.payload.estado !== 3) {\n    return null;\n}\n\nlet data = msg.payload;\n\n// IMPORTANTE: Estos nombres deben coincidir con data['id'], data['v_total']... de tu app.py\nmsg.payload = {\n    id: data.id,\n    v_total: data.v_total,\n    q_max: data.q_max,\n    ts_inicio: Date.now() - 30000, // Ajusta este cálculo si el ESP32 no lo envía\n    ts_fin: Date.now()\n};\n\nmsg.headers = {\n    \"Content-Type\": \"application/json\"\n};\n\n// URL exacta de tu endpoint en Flask\nmsg.url = \"http://flaskapp:5000/api/finalizar_prueba\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 460,
+        "wires": [
+            [
+                "401c30a882c5e25b"
+            ]
+        ]
+    },
+    {
+        "id": "090c10b5cb55d3f9",
+        "type": "switch",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "regex",
+                "v": "^\\{.*\\}$",
+                "vt": "str",
+                "case": false
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 230,
+        "y": 420,
+        "wires": [
+            [
+                "075eca1236e8c8ea"
+            ]
+        ]
+    },
+    {
+        "id": "42075c4b960d99fd",
+        "type": "switch",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "property": "payload.estado",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "3",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 530,
+        "y": 420,
+        "wires": [
+            [
+                "c1d0314766722d0d"
+            ],
+            [
+                "271d37c73c5cb8c7"
+            ]
+        ]
+    },
+    {
+        "id": "1125de08bc122ffb",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "48b962a8bc2da5eb",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": 8086,
+        "protocol": "http",
+        "database": "database",
+        "name": "datos",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://influxdb:8086",
+        "timeout": 10,
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "7727cd8923012873",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-influxdb": "0.7.0"
+        }
+    }
+]
