@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Historial de Consultas</h2>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID Paciente</th>
+                        <th>Fecha y Hora</th>
+                        <th>Volumen Total</th>
+                        <th>Q Máximo</th>
+                        <th>Consultar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in pacientes %}
+                    <tr>
+                        <td><strong>{{ p.paciente_id }}</strong></td>
+                        <td>{{ p.fecha }}</td>
+                        <td>{{ p.v_total }} ml</td>
+                        <td>{{ p.q_max }} ml/s</td>
+                        <td>
+                            <a href="{{ url_for('informe', id_real=p.id_real) }}"
+                                class="btn btn-sm btn-outline-primary">Ver Informe</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">
+                            No se han detectado muestras en la base de datos.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

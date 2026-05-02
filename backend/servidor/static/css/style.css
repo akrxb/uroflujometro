@@ -1,0 +1,109 @@
+:root {
+    --primary-medical: #0056b3;
+    --primary-hover: #004494;
+    --accent-medical: #00d1b2;
+    --text-dark: #2c3e50;
+    --text-muted: #7f8c8d;
+    --bg-light: #f1f4f8;
+    --white: #ffffff;
+    --shadow-sm: 0 2px 8px rgba(0, 56, 179, 0.05);
+    --shadow-md: 0 4px 15px rgba(0, 56, 179, 0.08);
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.navbar {
+    background-color: var(--white) !important;
+    border-bottom: 2px solid rgba(0, 86, 179, 0.08);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem 1rem !important;
+    transition: all 0.3s ease;
+}
+
+.main-logo {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.main-logo:hover {
+    transform: scale(1.05);
+}
+
+.nav-link {
+    color: var(--text-dark) !important;
+    font-weight: 600;
+    margin: 0 8px;
+    padding: 8px 16px !important;
+    border-radius: 8px;
+}
+
+.nav-link:hover {
+    color: var(--primary-medical) !important;
+    background-color: rgba(0, 86, 179, 0.05);
+}
+
+.hero-section {
+    padding: 60px 0 60px 0;
+    background-color: transparent;
+}
+
+.hero-section h1 {
+    color: var(--text-dark);
+    margin-bottom: 20px;
+}
+
+.col-md-4 h3 {
+    color: var(--primary-medical);
+    font-weight: 700;
+    margin-top: 20px;
+}
+
+.card {
+    border: none;
+    border-radius: 14px;
+    box-shadow: var(--shadow-md);
+    background-color: var(--white);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.table thead th {
+    background-color: #fafbfc;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.8px;
+    padding: 15px;
+}
+
+.table tbody td {
+    padding: 18px 15px;
+    vertical-align: middle;
+}
+
+.btn-primary {
+    background-color: var(--primary-medical);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+iframe {
+    border: none;
+    border-top: 4px solid var(--primary-medical);
+    border-radius: 0 0 14px 14px;
+    min-height: 480px;
+}
+
+footer {
+    margin-top: 5rem;
+    padding-bottom: 2rem;
+}

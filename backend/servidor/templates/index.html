@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Uroflujometría Digital</h1>
+        <p class="lead text-muted">Prueba no invasiva para el estudio de la dinámica urinaria.</p>
+        <div class="mt-4">
+            <a href="/consultas" class="btn btn-primary btn-lg px-5 shadow">Acceder a Consultas</a>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <i class="bi bi-activity text-primary fs-1"></i>
+            <h3>Precisión</h3>
+            <p>Sensor HX711 con filtrado digital en tiempo real.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-bar-chart-line text-primary fs-1"></i>
+            <h3>Visualización</h3>
+            <p>Gráficas dinámicas de Caudal y Volumen con Chart-JS.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-folder2-open text-primary fs-1"></i>
+            <h3>Historial</h3>
+            <p>Base de datos SQLite para el seguimiento del paciente.</p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
